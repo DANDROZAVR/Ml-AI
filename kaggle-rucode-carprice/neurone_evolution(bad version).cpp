@@ -4,7 +4,7 @@
 #define ld long double
 #define S second
 #define F first
-#define vvld vector < vector < ld > >
+#define vvld std::vector < std::vector < ld > >
 
 std::mt19937_64 gen(std::chrono::high_resolution_clock::now().time_since_epoch().count());
 ld sigmoid(ld x) {
@@ -22,16 +22,16 @@ public:
     return (ld) (gen() % 1001) / 1000;
   }
 } random;
-using namespace std;
+
 class genes {
   ld BEST = 0.0646384;
-  vector<ld> OTV;
+  std::vector<ld> OTV;
   ld b1 = 5;
   ld b2 = 0;
   ld b3 = -3;
   ld b4 = 6.8;
 public:
-  ld Cost(vector<ld> &genom, int cnt_test, int n, vector < vector < ld > > &test, vector < int > otv, int MinPrice, int MaxPrice) {
+  ld Cost(std::vector<ld> &genom, int cnt_test, int n, std::vector < std::vector < ld > > &test, std::vector < int > otv, int MinPrice, int std::maxPrice) {
     ld ans = 0;
     for (int i = 0; i < cnt_test; ++i) {
       ld sum1 = 0, sum2 = 0, sum3 = 0;
@@ -49,14 +49,14 @@ public:
       Final += activ2 * genom[n * 3 + 1];
       Final += activ3 * genom[n * 3 + 2];
       ld Factive = sigmoid(Final + b4);
-      ld Price = Factive * (MaxPrice - MinPrice) + MinPrice;
+      ld Price = Factive * (std::maxPrice - MinPrice) + MinPrice;
       ans += (Price - otv[i]) * (Price - otv[i]);
     }
     return ans;
   }
 
-  ld Score(vector<ld> &genom, int Znam, int cnt_test, int n, vector < vector < ld > > &test, vector < int > otv, int MinPrice, int MaxPrice) {
-    ld ans = 1 - (Cost(genom, cnt_test, n, test, otv, MinPrice, MaxPrice) / Znam);
+  ld Score(std::vector<ld> &genom, int Znam, int cnt_test, int n, std::vector < std::vector < ld > > &test, std::vector < int > otv, int MinPrice, int std::maxPrice) {
+    ld ans = 1 - (Cost(genom, cnt_test, n, test, otv, MinPrice, std::maxPrice) / Znam);
     if (ans > BEST) {
       BEST = ans;
       ofstream out("output.txt");
@@ -67,18 +67,18 @@ public:
     }
     return ans;
   }
-  vvld evolution(vvld genom, int N, int Znam, int PopSz, int child, int cnt_test, int n, vector < vector < ld > > &test, vector < int > otv, int MinPrice, int MaxPrice) {
+  vvld evolution(vvld genom, int N, int Znam, int PopSz, int child, int cnt_test, int n, std::vector < std::vector < ld > > &test, std::vector < int > otv, int MinPrice, int std::maxPrice) {
     vvld ne;
     int m = genom.size();
-    pair < ld, int > cost[m];
+    std::pair < ld, int > cost[m];
     for (int i = 0; i < m; ++i){
-      cost[i].F = Cost(genom[i], cnt_test, n, test, otv, MinPrice, MaxPrice);
+      cost[i].F = Cost(genom[i], cnt_test, n, test, otv, MinPrice, std::maxPrice);
       cost[i].S = i;
     }
-    sort(cost, cost + m, [&](pair < ld, int > a, pair < ld, int > b){
+    sort(cost, cost + m, [&](std::pair < ld, int > a, std::pair < ld, int > b){
       return a.F < b.F;
     });
-    //cerr<<fixed<<setprecision(7)<<Score(genom[cost[0].S], Znam, cnt_test, n, test, otv, MinPrice, MaxPrice)<<endl; // progress genes
+    //std::cer<<fixed<<setprecision(7)<<Score(genom[cost[0].S], Znam, cnt_test, n, test, otv, MinPrice, std::maxPrice)<<endl; // progress genes
     m = PopSz;
     while(ne.size() < PopSz){
       for (int kol = 0; kol < child; ++kol)
@@ -92,7 +92,7 @@ public:
               if (gen() % 7 == 0){
                 NewGen[i] += random.segment01() / 10;
                 NewGen[i] = min(NewGen[i], (ld)(1));
-                NewGen[i] = max(NewGen[i], (ld)(-1));
+                NewGen[i] = std::max(NewGen[i], (ld)(-1));
               }
           }
           ne.pb(NewGen);
@@ -103,19 +103,19 @@ public:
 };
 
 class solution {
-  int PopSz, cnt_test, n, MaxPrice = -1, MinPrice = 1e18, child, n2, N;
+  int PopSz, cnt_test, n, std::maxPrice = -1, MinPrice = 1e18, child, n2, N;
   double Mut, Pnxt, ch_by_iter, EpsAns, Znam;
-  const int MAXN = 3e5;
-  vector < vector<ld> > test;
-  vector<ld> eps, sigma;
-  vector < int > otv;
+  const int std::maxN = 3e5;
+  std::vector < std::vector<ld> > test;
+  std::vector<ld> eps, sigma;
+  std::vector < int > otv;
 public:
   int getN() const {
     return N;
   }
   void Init(int _PopSz = 140, double _Mut = 0.5, int _child = 1, int _cnt_test = 140000, int _n = 11, int _n2 = 3, ld _ch_by_iter = 0.6) {
-    test.resize(MAXN);
-    otv.resize(MAXN);
+    test.resize(std::maxN);
+    otv.resize(std::maxN);
     PopSz = _PopSz;
     Mut = _Mut;
     child = _child;
@@ -129,7 +129,7 @@ public:
     for (int i = 0; i < cnt_test; ++i)
       test[i].resize(n);
   }
-  ld Stod(string s) {
+  ld Stod(std::string s) {
     ld ans = 0;
     while (s.size() && s[0] != '.') {
       ans = ans * 10 + s[0] - '0';
@@ -146,11 +146,11 @@ public:
     return ans;
   }
   void ReadData() {
-    string z = "5";
+    std::string z = "5";
     ifstream in("NewTest.csv");
-    string s;
+    std::string s;
     getline(in, s);
-    vector<string> v;
+    std::vector<std::string> v;
     for (int i = 0; i < cnt_test; ++i) {
       getline(in, s);
       v.pb(s);
@@ -158,17 +158,17 @@ public:
     shuffle(v.begin(), v.end(), gen);
 
     int num = 0;
-    for (string &s : v) {
+    for (std::string &s : v) {
       int i = 0;
       int cnt = 0, now = 0;
       while (i < s.size()) {
         int Pi = i;
         while (i < s.size() && s[i] != ',') ++i;
-        string q = s.substr(Pi, i - Pi);
+        std::string q = s.substr(Pi, i - Pi);
         if (cnt == 11) {
           otv[num] = stod(q);
           EpsAns += otv[num];
-          MaxPrice = max(MaxPrice, otv[num]);
+          std::maxPrice = std::max(std::maxPrice, otv[num]);
           MinPrice = min(MinPrice, otv[num]);
         } else if ((cnt >= 3 && cnt <= 5) || (cnt >= 8 && cnt <= 10)) {
           if (q == "nan" || q.empty()) {
@@ -246,19 +246,19 @@ public:
   }
   void run() {
     genes population;
-    vector < vector < ld > > allgenes;
+    std::vector < std::vector < ld > > allgenes;
     for (int j = 0; j < 1000; ++j){
-      vector < ld > v;
+      std::vector < ld > v;
       for (int i = 0; i < N; ++i)
         v.pb(random.segment11());
       allgenes.pb(v);
     }
 
     for (int iter = 0; iter < 100000; ++iter){
-      auto V = population.evolution(allgenes, N, Znam, PopSz, child, cnt_test, n, test, otv, MinPrice, MaxPrice);
+      auto V = population.evolution(allgenes, N, Znam, PopSz, child, cnt_test, n, test, otv, MinPrice, std::maxPrice);
       allgenes = V;
     }
-    // ready for counting the data, taking into account the genes 
+    // ready for counting the data, taking into account the genes
   }
 };
 
